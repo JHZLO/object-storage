@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}"
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id "org.jetbrains.kotlin.plugin.noarg"  version "${kotlinVersion}"
 }
 
 group = "${group}"
@@ -23,17 +24,18 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://repo.spring.io/release") }
 }
 
 allOpen {
-    annotation("org.springframework.stereotype.Component")
-    annotation("org.springframework.stereotype.Service")
-    annotation("org.springframework.stereotype.Repository")
-    annotation("org.springframework.web.bind.annotation.RestController")
-    annotation("org.springframework.context.annotation.Configuration")
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
+    annotation("org.springframework.stereotype.Component")
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
 }
 
 dependencyManagement {
@@ -48,4 +50,5 @@ apply from: "gradle/jwt.gradle"
 apply from: "gradle/lombok.gradle"
 apply from: "gradle/spring.gradle"
 apply from: "gradle/swagger.gradle"
+apply from: "gradle/jetbrains.gradle"
 apply from: "gradle/test.gradle"
