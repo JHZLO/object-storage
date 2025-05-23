@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
     id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}"
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 }
@@ -22,6 +23,17 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+allOpen {
+    annotation("org.springframework.stereotype.Component")
+    annotation("org.springframework.stereotype.Service")
+    annotation("org.springframework.stereotype.Repository")
+    annotation("org.springframework.web.bind.annotation.RestController")
+    annotation("org.springframework.context.annotation.Configuration")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 dependencyManagement {
