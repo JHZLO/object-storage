@@ -1,5 +1,6 @@
 package com.dku.objectstorage.user.domain.entity
 
+import com.dku.objectstorage.auth.dto.SignUpRequest
 import com.dku.objectstorage.common.jpa.shared.BaseEntity
 import com.dku.objectstorage.user.domain.entity.vo.UserRole
 import jakarta.persistence.Column
@@ -31,4 +32,13 @@ class User(
     @Enumerated(EnumType.STRING)
     var userRole: UserRole = UserRole.User,
 ) : BaseEntity() {
+    companion object{
+        fun of(signUp: SignUpRequest, password: String): User {
+            return User(
+                email = signUp.email,
+                name = signUp.userName,
+                password = password
+            )
+        }
+    }
 }
