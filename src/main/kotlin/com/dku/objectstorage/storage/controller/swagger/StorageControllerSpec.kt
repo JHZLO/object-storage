@@ -6,15 +6,12 @@ import com.dku.objectstorage.storage.dto.FileUploadResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "ObjectStorage File", description = "파일 업로드/다운로드 API")
-@RequestMapping("/api/v1/files")
 interface StorageControllerSpec {
 
     @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
-    @PostMapping("/upload", consumes = ["multipart/form-data"])
     fun uploadFile(
         @Parameter(description = "업로드할 파일")
         file: MultipartFile,
