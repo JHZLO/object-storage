@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
 @Entity
@@ -39,4 +40,28 @@ data class FileMetadata(
 
     @Column(nullable = true)
     val downloadPassword: String? = null
-)
+){
+    companion object {
+        fun of(
+            id: String,
+            file: MultipartFile,
+            storedPath: String,
+            uploaderId: Long,
+            permission: Permission,
+            password: String?
+        ): FileMetadata {
+            return FileMetadata(
+                id = id,
+                originalName = file.originalFilename ?: "unknown",
+                storedPath = storedPath,
+                size = file.size,
+                contentType = file.contentType ?: "application/octet-stream",
+                uploadedAt = LocalDateTime.now(),
+                permission = permission,
+                uploaderId = uploaderId,
+                downloadPassword = if (permission == Permission.SECRET) password else null
+            )
+        }
+    }
+
+}
