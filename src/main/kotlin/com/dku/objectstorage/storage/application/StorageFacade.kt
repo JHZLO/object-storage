@@ -25,7 +25,7 @@ class StorageFacade(
     ): FileUploadResponse {
         // 1. UUID 및 파일명 생성
         val fileId = UUID.randomUUID().toString()
-        val extension = file.originalFilename?.substringAfterLast('.', "") ?: "dat"
+        val extension = file.originalFilename?.substringAfterLast('.', "") ?: DEFAULT_EXTENSION
         val storedFileName = "$fileId.$extension"
 
         // 2. 로컬 저장소에 파일 저장
@@ -45,7 +45,7 @@ class StorageFacade(
         // 4. 응답 반환
         return FileUploadResponse(
             fileId = fileId,
-            downloadUrl = "/download/$fileId"
+            downloadUrl = "$DOWNLOAD_URL_PREFIX$fileId"
         )
     }
 
@@ -71,4 +71,8 @@ class StorageFacade(
         )
     }
 
+    companion object {
+        private const val DEFAULT_EXTENSION = "dat"
+        private const val DOWNLOAD_URL_PREFIX = "/download/"
+    }
 }
