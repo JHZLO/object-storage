@@ -6,6 +6,12 @@ import com.dku.objectstorage.storage.application.StorageFacade
 import com.dku.objectstorage.storage.controller.swagger.StorageControllerSpec
 import com.dku.objectstorage.storage.domain.entity.vo.Permission
 import com.dku.objectstorage.storage.dto.FileUploadResponse
+import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -29,5 +35,17 @@ class StorageController(
     ): ApiResponse<FileUploadResponse> {
         val response = storageFacade.uploadFile(file, uploaderId, permission, password)
         return ApiResponse.success(response)
+    }
+
+    @GetMapping("/download/{fileId}")
+    override fun downloadFile(
+        @PathVariable fileId: String,
+        @RequestParam("password", required = false) password: String?
+    ): ResponseEntity<Resource> {
+        val fileResponse = storageFacade.getFile(fileId, password)
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(fileResponse.contentType))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"${fileResponse.originalName}\"")
+            .body(fileResponse.resource)
     }
 }

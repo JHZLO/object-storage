@@ -6,6 +6,8 @@ import com.dku.objectstorage.storage.dto.FileUploadResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.core.io.Resource
+import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "ObjectStorage File", description = "파일 업로드/다운로드 API")
@@ -24,4 +26,16 @@ interface StorageControllerSpec {
         @Parameter(description = "SECRET 권한일 경우 비밀번호 (선택)", required = false)
         password: String?
     ): ApiResponse<FileUploadResponse>
+
+    @Operation(
+        summary = "파일 다운로드(웹뷰 지원)",
+        description = "fileId로 파일을 다운로드(혹은 웹뷰에서 바로 볼 수 있도록)합니다.",
+    )
+    fun downloadFile(
+        @Parameter(description = "다운로드할 파일의 ID")
+        fileId: String,
+
+        @Parameter(description = "SECRET 권한 파일의 비밀번호", required = false)
+        password: String?
+    ): ResponseEntity<Resource>
 }
