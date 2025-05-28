@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 @Table(name = "file_metadata")
 data class FileMetadata(
     @Id
-    val id: String,
+    val id: Long,
 
     @Column(nullable = false)
     val originalName: String,
@@ -43,7 +43,7 @@ data class FileMetadata(
 ){
     companion object {
         fun of(
-            id: String,
+            id: Long,
             file: MultipartFile,
             storedPath: String,
             uploaderId: Long,
