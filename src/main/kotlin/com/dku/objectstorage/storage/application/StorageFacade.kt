@@ -1,9 +1,11 @@
 package com.dku.objectstorage.storage.application
 
+import com.dku.objectstorage.common.infrastructure.exception.BadRequestException
 import com.dku.objectstorage.storage.domain.entity.FileMetadata
 import com.dku.objectstorage.storage.domain.entity.vo.Permission
 import com.dku.objectstorage.storage.domain.service.FileMetadataService
 import com.dku.objectstorage.storage.domain.service.LocalFileStorageService
+import com.dku.objectstorage.storage.dto.FileDownloadResponse
 import com.dku.objectstorage.storage.dto.FileUploadResponse
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -46,4 +48,27 @@ class StorageFacade(
             downloadUrl = "/download/$fileId"
         )
     }
+
+    fun getFile(fileId: String, password: String?): FileDownloadResponse {
+        // 1. 메타데이터 조회
+        val metadata = fileMetadataService.findById(fileId)
+            ?: throw BadRequestException("objectstorage.storage.file-not-found")
+
+        // 2. 권한 확인
+        if (metadata.permission == Permission.SECRET) {
+            if (password != metadata.downloadPassword) {
+                throw BadRequestException("objectstorage.storage.password-invalid")
+            }
+        }
+
+        // 3. 파일 읽기
+        val resource = localFileStorageService.load(metadata.storedPath)
+
+        return FileDownloadResponse(
+            resource = resource,
+            contentType = metadata.contentType,
+            originalName = metadata.originalName
+        )
+    }
+
 }
