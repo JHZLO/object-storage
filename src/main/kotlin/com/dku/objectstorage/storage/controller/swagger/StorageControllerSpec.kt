@@ -10,7 +10,7 @@ import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "ObjectStorage File", description = "파일 업로드/다운로드 API")
+@Tag(name = "ObjectStorage File Upload/Download", description = "파일 업로드/다운로드 API")
 interface StorageControllerSpec {
 
     @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
