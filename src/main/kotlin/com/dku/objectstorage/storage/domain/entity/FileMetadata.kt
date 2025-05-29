@@ -17,29 +17,29 @@ data class FileMetadata(
     val id: String,
 
     @Column(nullable = false)
-    val originalName: String,
+    var originalName: String,
 
     @Column(nullable = false)
-    val storedPath: String,
+    var storedPath: String,
 
     @Column(nullable = false)
-    val size: Long,
+    var size: Long,
 
     @Column(nullable = false)
-    val contentType: String,
+    var contentType: String,
 
     @Column(nullable = false)
-    val uploadedAt: LocalDateTime,
+    var uploadedAt: LocalDateTime,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val permission: Permission,
+    var permission: Permission,
 
     @Column(nullable = false)
-    val uploaderId: Long,
+    var uploaderId: Long,
 
     @Column(nullable = true)
-    val downloadPassword: String? = null
+    var downloadPassword: String? = null
 ){
     companion object {
         fun of(
