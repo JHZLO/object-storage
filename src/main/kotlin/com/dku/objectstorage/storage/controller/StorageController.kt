@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-@RequestMapping("/api/v1/files")
+@RequestMapping("/api/v1")
 class StorageController(
     private val storageFacade: StorageFacade
 ) : StorageControllerSpec {

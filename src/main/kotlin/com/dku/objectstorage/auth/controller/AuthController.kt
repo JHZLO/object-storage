@@ -18,7 +18,7 @@ class AuthController(
     private val authFacade: AuthFacade
 ) : AuthControllerSpec {
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     override fun signup(@RequestBody request: SignUpRequest): ApiResponse<Boolean> {
         authFacade.signUp(request)
         return ApiResponse.success(true)
