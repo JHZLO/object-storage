@@ -1,15 +1,17 @@
 package com.dku.objectstorage.storage.application
 
 import com.dku.objectstorage.storage.domain.service.FileMetadataService
+import com.dku.objectstorage.storage.domain.service.LocalFileStorageService
 import com.dku.objectstorage.storage.dto.FileMetadataResponse
 import com.dku.objectstorage.storage.dto.PermissionChangeRequest
 import org.springframework.stereotype.Component
 
 
 @Component
-class FileFacade (
-    private val fileMetadataService: FileMetadataService
-){
+class FileFacade(
+    private val fileMetadataService: FileMetadataService,
+    private val localFileStorageService: LocalFileStorageService
+) {
     fun getFilesByUser(userId: Long): List<FileMetadataResponse> {
         val files = fileMetadataService.findByUploaderId(userId)
         return files.map { FileMetadataResponse.from(it) }
@@ -27,10 +29,21 @@ class FileFacade (
         val file = fileMetadataService.getById(fileId)
 
         if (file.uploaderId != userId) {
-            throw IllegalAccessException("본인만 접근 권한을 변경할 수 있습니다.")
+            throw IllegalAccessException("objectstorage.storage.file-not-permission")
         }
 
         file.changePermission(request.permission, request.password)
         fileMetadataService.save(file)
+    }
+
+    fun deleteFile(fileId: String, userId: Long) {
+        val file = fileMetadataService.getById(fileId)
+
+        if (file.uploaderId != userId) {
+            throw IllegalAccessException("objectstorage.storage.file-not-permission")
+        }
+
+        localFileStorageService.delete(file.storedPath)
+        fileMetadataService.delete(fileId)
     }
 }
