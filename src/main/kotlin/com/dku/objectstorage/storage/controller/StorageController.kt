@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @RestController
 @RequestMapping("/api/v1")
 class StorageController(
     private val storageFacade: StorageFacade
 ) : StorageControllerSpec {
-
 
     @PostMapping("/upload", consumes = ["multipart/form-data"])
     override fun uploadFile(
@@ -37,16 +38,21 @@ class StorageController(
         return ApiResponse.success(response)
     }
 
-    @GetMapping("/download/{fileId}")
+    @GetMapping("/download/{id}")
     override fun downloadFile(
-        @PathVariable fileId: String,
-        @RequestParam("password", required = false) password: String?,
-        @LoginUser userId: Long?
+        @PathVariable id: String,
+        @RequestParam(required = false) password: String?,
+        @LoginUser userId: Long?,
+        @RequestParam(defaultValue = "inline") disposition: String // "inline" 또는 "attachment"
     ): ResponseEntity<Resource> {
-        val fileResponse = storageFacade.getFile(fileId, password, userId)
+        val file = storageFacade.getFile(id, password, userId)
+
         return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(fileResponse.contentType))
-            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"${fileResponse.originalName}\"")
-            .body(fileResponse.resource)
+            .header(HttpHeaders.CONTENT_TYPE, file.contentType)
+            .header(
+                HttpHeaders.CONTENT_DISPOSITION,
+                "$disposition; filename=\"${URLEncoder.encode(file.originalName, StandardCharsets.UTF_8)}\""
+            )
+            .body(file.resource)
     }
 }
