@@ -21,7 +21,7 @@ interface FileControllerSpec {
         @LoginUser userId: Long
     ): ApiResponse<FileMetadataResponse>
 
-    @Operation(summary = "파일 접근 권한 변경")
+    @Operation(summary = "파일 접근 권한 변경 (PUBLIC: 전체 공개, PRIVATE: 나만 보기, SECRET: 비밀번호 설정")
     fun changePermission(
         @Parameter(description = "파일 ID") id: String,
         request: PermissionChangeRequest,
