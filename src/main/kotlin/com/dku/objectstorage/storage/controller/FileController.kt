@@ -6,6 +6,7 @@ import com.dku.objectstorage.storage.application.FileFacade
 import com.dku.objectstorage.storage.controller.swagger.FileControllerSpec
 import com.dku.objectstorage.storage.dto.FileMetadataResponse
 import com.dku.objectstorage.storage.dto.PermissionChangeRequest
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -39,6 +40,12 @@ class FileController(
         @LoginUser userId: Long
     ): ApiResponse<Boolean> {
         fileFacade.changePermission(id, userId, request)
+        return ApiResponse.success(true)
+    }
+
+    @DeleteMapping("/{id}")
+    override fun deleteFile(@PathVariable id: String, @LoginUser userId: Long): ApiResponse<Boolean> {
+        fileFacade.deleteFile(id, userId)
         return ApiResponse.success(true)
     }
 }

@@ -7,8 +7,6 @@ import com.dku.objectstorage.storage.dto.PermissionChangeRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "ObjectStorage File", description = "파일 조회/권한설정")
 interface FileControllerSpec {
@@ -30,4 +28,9 @@ interface FileControllerSpec {
         @LoginUser userId: Long
     ): ApiResponse<Boolean>
 
+    @Operation(summary = "파일 삭제", description = "업로드한 파일을 삭제합니다.")
+    fun deleteFile(
+        @Parameter(description = "파일 ID") id: String,
+        @LoginUser userId: Long
+    ): ApiResponse<Boolean>
 }
