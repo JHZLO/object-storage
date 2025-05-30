@@ -17,7 +17,7 @@ interface FileControllerSpec {
 
     @Operation(summary = "파일 상세 조회", description = "파일의 메타데이터(파일명, 크기, 권한 등)를 조회")
     fun getFileDetail(
-        @Parameter(description = "파일 ID") @PathVariable id: String,
+        @Parameter(description = "파일 ID") id: String,
         @LoginUser userId: Long
     ): ApiResponse<FileMetadataResponse>
 }
