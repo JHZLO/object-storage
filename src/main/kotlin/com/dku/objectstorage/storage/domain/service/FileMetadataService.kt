@@ -30,4 +30,8 @@ class FileMetadataService(
     fun findByUploaderId(uploaderId: Long): List<FileMetadata> {
         return fileMetadataRepository.findAllByUploaderId(uploaderId)
     }
+
+    fun delete(fileId: String) {
+        fileMetadataRepository.deleteById(fileId)
+    }
 }
