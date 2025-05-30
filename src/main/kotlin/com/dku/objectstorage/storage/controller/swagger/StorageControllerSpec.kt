@@ -1,5 +1,6 @@
 package com.dku.objectstorage.storage.controller.swagger
 
+import com.dku.objectstorage.common.annotation.loginUser.LoginUser
 import com.dku.objectstorage.common.web.response.ApiResponse
 import com.dku.objectstorage.storage.domain.entity.vo.Permission
 import com.dku.objectstorage.storage.dto.FileUploadResponse
@@ -15,16 +16,10 @@ interface StorageControllerSpec {
 
     @Operation(summary = "파일 업로드", description = "파일을 업로드합니다.")
     fun uploadFile(
-        @Parameter(description = "업로드할 파일")
-        file: MultipartFile,
-
-        uploaderId: Long,
-
-        @Parameter(description = "파일 접근 권한 (PUBLIC, PRIVATE, SECRET)")
-        permission: Permission,
-
-        @Parameter(description = "SECRET 권한일 경우 비밀번호 (선택)", required = false)
-        password: String?
+        @Parameter(description = "업로드할 파일") file: MultipartFile,
+        @LoginUser uploaderId: Long,
+        @Parameter(description = "파일 접근 권한 (PUBLIC, PRIVATE, SECRET)") permission: Permission,
+        @Parameter(description = "SECRET 권한일 경우 비밀번호 (선택)", required = false) password: String?
     ): ApiResponse<FileUploadResponse>
 
     @Operation(
@@ -32,10 +27,8 @@ interface StorageControllerSpec {
         description = "fileId로 파일을 다운로드(혹은 웹뷰에서 바로 볼 수 있도록)합니다.",
     )
     fun downloadFile(
-        @Parameter(description = "다운로드할 파일의 ID")
-        fileId: String,
-
-        @Parameter(description = "SECRET 권한 파일의 비밀번호", required = false)
-        password: String?
+        @Parameter(description = "다운로드할 파일의 ID") fileId: String,
+        @Parameter(description = "SECRET 권한 파일의 비밀번호", required = false) password: String?,
+        @LoginUser userId: Long?
     ): ResponseEntity<Resource>
 }

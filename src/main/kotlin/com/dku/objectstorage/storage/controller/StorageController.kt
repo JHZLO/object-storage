@@ -40,9 +40,10 @@ class StorageController(
     @GetMapping("/download/{fileId}")
     override fun downloadFile(
         @PathVariable fileId: String,
-        @RequestParam("password", required = false) password: String?
+        @RequestParam("password", required = false) password: String?,
+        @LoginUser userId: Long?
     ): ResponseEntity<Resource> {
-        val fileResponse = storageFacade.getFile(fileId, password)
+        val fileResponse = storageFacade.getFile(fileId, password, userId)
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(fileResponse.contentType))
             .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"${fileResponse.originalName}\"")

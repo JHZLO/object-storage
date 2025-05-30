@@ -49,15 +49,28 @@ class StorageFacade(
         )
     }
 
-    fun getFile(fileId: String, password: String?): FileDownloadResponse {
+    fun getFile(fileId: String, password: String?, requesterId: Long?): FileDownloadResponse {
         // 1. 메타데이터 조회
         val metadata = fileMetadataService.findById(fileId)
             ?: throw BadRequestException("objectstorage.storage.file-not-found")
 
         // 2. 권한 확인
-        if (metadata.permission == Permission.SECRET) {
-            if (password != metadata.downloadPassword) {
-                throw BadRequestException("objectstorage.storage.password-invalid")
+        when (metadata.permission) {
+            Permission.PUBLIC -> {
+                // 누구나 접근 가능 → 통과
+            }
+
+            Permission.PRIVATE -> {
+                // 로그인 사용자의 ID와 uploaderId 비교
+                if (requesterId == null || metadata.uploaderId != requesterId) {
+                    throw BadRequestException("objectstorage.storage.file-not-permission")
+                }
+            }
+
+            Permission.SECRET -> {
+                if (password != metadata.downloadPassword) {
+                    throw BadRequestException("objectstorage.storage.password-invalid")
+                }
             }
         }
 
