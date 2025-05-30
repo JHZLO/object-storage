@@ -64,4 +64,8 @@ data class FileMetadata(
         }
     }
 
+    fun changePermission(newPermission: Permission, password: String?) {
+        this.permission = newPermission
+        this.downloadPassword = if (newPermission == Permission.SECRET) password else null
+    }
 }
