@@ -29,4 +29,11 @@ class LocalFileStorageService {
         }
         return UrlResource(path.toUri())
     }
+
+    fun delete(path: String) {
+        val filePath = Paths.get(path)
+        if (Files.exists(filePath)) {
+            Files.delete(filePath)
+        }
+    }
 }
