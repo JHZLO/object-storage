@@ -10,7 +10,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6864
+      port: 6379
 
     jpa:
       hibernate:
